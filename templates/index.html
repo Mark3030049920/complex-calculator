@@ -1,0 +1,2308 @@
+<!DOCTYPE html>
+
+<html lang="{{ language }}">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        {{ translations.get(
+            "title",
+            "Калькулятор квадратного корня"
+        ) }}
+    </title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --primary-light: #eef2ff;
+
+            --background: #f1f5f9;
+            --card: #ffffff;
+
+            --text: #0f172a;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+
+            --border: #e2e8f0;
+            --input-border: #cbd5e1;
+
+            --error-background: #fef2f2;
+            --error-border: #fecaca;
+            --error-text: #b91c1c;
+
+            --success-background: #f0fdf4;
+            --success-border: #bbf7d0;
+
+            --trig-background: #faf5ff;
+            --trig-border: #e9d5ff;
+            --trig-text: #7e22ce;
+        }
+
+        html {
+            min-height: 100%;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            padding-bottom: 84px;
+
+            font-family:
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                Roboto,
+                Arial,
+                sans-serif;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #eef2ff 0%,
+                    #f8fafc 50%,
+                    #e0f2fe 100%
+                );
+
+            color: var(--text);
+        }
+
+        .page {
+            min-height: 100vh;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 32px 16px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 820px;
+        }
+
+        .card {
+            background: var(--card);
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 22px;
+
+            padding: 36px;
+
+            box-shadow:
+                0 20px 50px
+                rgba(15, 23, 42, 0.08);
+        }
+
+        /* HEADER */
+        .header {
+            margin-bottom: 24px;
+        }
+
+        h1 {
+            margin: 0 0 7px;
+            font-size: 30px;
+            line-height: 1.2;
+        }
+
+        .title-note {
+            margin-left: 6px;
+            color: var(--text-muted);
+            font-size: 15px;
+            font-weight: 400;
+        }
+
+        .subtitle {
+            margin: 0;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* TABS */
+        .tabs {
+            display: flex;
+            gap: 8px;
+            padding: 5px;
+            margin-bottom: 26px;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 12px;
+
+            background: #f8fafc;
+        }
+
+        .tab-button {
+            flex: 1;
+
+            border: 0;
+            border-radius: 9px;
+
+            padding: 11px 14px;
+
+            background: transparent;
+            color: var(--text-secondary);
+
+            font-size: 15px;
+            font-weight: 600;
+
+            cursor: pointer;
+
+            transition:
+                background 0.15s,
+                color 0.15s,
+                box-shadow 0.15s;
+        }
+
+        .tab-button:hover {
+            color: var(--primary);
+        }
+
+        .tab-button.active {
+            background: white;
+            color: var(--primary);
+
+            box-shadow:
+                0 2px 7px
+                rgba(15, 23, 42, 0.08);
+        }
+
+        /* FORMS */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        label {
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        input {
+            width: 100%;
+
+            padding: 13px 14px;
+
+            border:
+                1px solid
+                var(--input-border);
+
+            border-radius: 10px;
+
+            font-size: 16px;
+            color: var(--text);
+
+            background: #fff;
+
+            outline: none;
+
+            transition:
+                border-color 0.15s,
+                box-shadow 0.15s;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+
+            box-shadow:
+                0 0 0 3px
+                rgba(79, 70, 229, 0.12);
+        }
+
+        .hint {
+            color: var(--text-muted);
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .settings {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        /* BUTTON */
+        .calculate-button {
+            border: 0;
+            border-radius: 10px;
+
+            padding: 14px 20px;
+
+            background: var(--primary);
+            color: white;
+
+            font-size: 16px;
+            font-weight: 600;
+
+            cursor: pointer;
+
+            transition:
+                background 0.15s,
+                transform 0.1s;
+        }
+
+        .calculate-button:hover {
+            background: var(--primary-dark);
+        }
+
+        .calculate-button:active {
+            transform: translateY(1px);
+        }
+
+        .trig-button {
+            background: #9333ea;
+        }
+
+        .trig-button:hover {
+            background: #7e22ce;
+        }
+
+        /* ERROR */
+        .error {
+            margin-top: 24px;
+
+            padding: 16px;
+
+            border:
+                1px solid
+                var(--error-border);
+
+            border-radius: 10px;
+
+            background: var(--error-background);
+
+            color: var(--error-text);
+
+            line-height: 1.5;
+        }
+
+        .error-title {
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        /* ROOT RESULTS */
+        .results {
+            margin-top: 28px;
+
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .result-card {
+            padding: 20px;
+
+            border:
+                1px solid
+                var(--success-border);
+
+            border-radius: 12px;
+
+            background:
+                var(--success-background);
+        }
+
+        .result-label {
+            margin-bottom: 10px;
+
+            color: var(--text-secondary);
+
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .result-value {
+            color: var(--text);
+
+            font-family:
+                "Cascadia Code",
+                "Consolas",
+                monospace;
+
+            font-size: 20px;
+            font-weight: 600;
+
+            overflow-wrap: anywhere;
+        }
+
+        /* TRIGONOMETRY */
+        .trig-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .unit-selector {
+            display: flex;
+            gap: 8px;
+        }
+
+        .unit-option {
+            flex: 1;
+            position: relative;
+        }
+
+        .unit-option input {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .unit-option span {
+            display: block;
+
+            padding: 12px;
+
+            border:
+                1px solid
+                var(--input-border);
+
+            border-radius: 10px;
+
+            text-align: center;
+
+            color: var(--text-secondary);
+
+            background: white;
+
+            cursor: pointer;
+
+            transition:
+                border-color 0.15s,
+                background 0.15s,
+                color 0.15s;
+        }
+
+        .unit-option input:checked + span {
+            border-color: var(--primary);
+            background: var(--primary-light);
+            color: var(--primary);
+
+            font-weight: 600;
+        }
+
+        .trig-results {
+            margin-top: 28px;
+        }
+
+        .trig-result-card {
+            padding: 22px;
+
+            border:
+                1px solid
+                var(--trig-border);
+
+            border-radius: 14px;
+
+            background:
+                var(--trig-background);
+        }
+
+        .trig-result-title {
+            margin-bottom: 18px;
+
+            color: var(--trig-text);
+
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        .trig-line {
+            padding: 12px 14px;
+            margin-top: 10px;
+
+            border-radius: 9px;
+
+            background:
+                rgba(255,255,255,0.8);
+
+            border:
+                1px solid
+                rgba(233,213,255,0.8);
+
+            font-family:
+                "Cascadia Code",
+                "Consolas",
+                monospace;
+
+            font-size: 15px;
+            line-height: 1.6;
+
+            overflow-wrap: anywhere;
+        }
+
+        .trig-label {
+            display: block;
+
+            margin-bottom: 5px;
+
+            color: var(--text-secondary);
+
+            font-family:
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                Roboto,
+                Arial,
+                sans-serif;
+
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        /* LANGUAGE */
+        .language-section {
+            margin-top: 30px;
+            padding-top: 22px;
+
+            border-top:
+                1px solid
+                var(--border);
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 18px;
+        }
+
+        .language-label {
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .language-switcher {
+            position: relative;
+
+            display: flex;
+            align-items: center;
+
+            gap: 8px;
+        }
+
+        .language-link {
+            height: 38px;
+
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 0 13px;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 9px;
+
+            background: white;
+            color: var(--text-secondary);
+
+            text-decoration: none;
+
+            font-size: 14px;
+            font-weight: 600;
+
+            cursor: pointer;
+
+            transition:
+                border-color 0.15s ease,
+                color 0.15s ease,
+                background 0.15s ease,
+                transform 0.15s ease,
+                box-shadow 0.15s ease;
+        }
+
+        .language-link:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: var(--primary-light);
+
+            transform: translateY(-1px);
+        }
+
+        .language-link.active {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: var(--primary-light);
+
+            box-shadow:
+                0 2px 7px
+                rgba(79,70,229,0.10);
+        }
+
+        .language-more-button {
+            height: 38px;
+
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            gap: 7px;
+
+            padding: 0 13px;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 9px;
+
+            background: white;
+            color: var(--text-secondary);
+
+            font-family: inherit;
+
+            font-size: 14px;
+            font-weight: 600;
+
+            cursor: pointer;
+
+            transition:
+                border-color 0.15s ease,
+                color 0.15s ease,
+                background 0.15s ease,
+                box-shadow 0.15s ease;
+        }
+
+        .language-more-button:hover,
+        .language-more-button.open {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: var(--primary-light);
+
+            box-shadow:
+                0 4px 12px
+                rgba(79,70,229,0.10);
+        }
+
+        .language-more-arrow {
+            width: 7px;
+            height: 7px;
+
+            border-right:
+                1.8px solid
+                currentColor;
+
+            border-bottom:
+                1.8px solid
+                currentColor;
+
+            transform:
+                rotate(45deg)
+                translateY(-2px);
+
+            transition:
+                transform 0.18s ease;
+        }
+
+        .language-more-button.open
+        .language-more-arrow {
+            transform:
+                rotate(-135deg)
+                translate(-1px,-1px);
+        }
+
+        .language-menu {
+            position: absolute;
+
+            top: calc(100% + 10px);
+            right: 0;
+
+            width: 310px;
+
+            padding: 10px;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 14px;
+
+            background:
+                rgba(255,255,255,0.98);
+
+            box-shadow:
+                0 16px 35px
+                rgba(15,23,42,0.12),
+                0 4px 10px
+                rgba(15,23,42,0.05);
+
+            backdrop-filter: blur(12px);
+
+            z-index: 100;
+
+            opacity: 0;
+            visibility: hidden;
+
+            transform:
+                translateY(-6px)
+                scale(0.98);
+
+            transform-origin: top right;
+
+            transition:
+                opacity 0.16s ease,
+                visibility 0.16s ease,
+                transform 0.16s ease;
+        }
+
+        .language-menu.open {
+            opacity: 1;
+            visibility: visible;
+
+            transform:
+                translateY(0)
+                scale(1);
+        }
+
+        .language-menu-list {
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 6px;
+        }
+
+        .language-menu-item {
+            min-width: 0;
+            min-height: 40px;
+
+            display: flex;
+            align-items: center;
+
+            padding: 0 11px;
+
+            border:
+                1px solid
+                transparent;
+
+            border-radius: 9px;
+
+            background: transparent;
+            color: var(--text-secondary);
+
+            text-decoration: none;
+
+            font-size: 13px;
+            font-weight: 600;
+
+            cursor: pointer;
+
+            transition:
+                background .15s ease,
+                color .15s ease,
+                border-color .15s ease;
+        }
+
+        .language-menu-item:hover {
+            background: var(--primary-light);
+            color: var(--primary);
+
+            border-color:
+                rgba(79,70,229,.12);
+        }
+
+        .language-menu-item.active {
+            background: var(--primary-light);
+            color: var(--primary);
+
+            border-color:
+                rgba(79,70,229,.16);
+        }
+
+        .language-menu-item-check {
+            margin-left: auto;
+
+            color: var(--primary);
+
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        /* SUPPORT */
+        .support-button {
+            position: fixed;
+
+            right: 22px;
+            bottom: 22px;
+
+            z-index: 1000;
+
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            gap: 8px;
+
+            min-width: 164px;
+            height: 44px;
+
+            padding: 0 17px;
+
+            border:
+                1px solid
+                rgba(255,255,255,.5);
+
+            border-radius: 12px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--primary),
+                    #6366f1
+                );
+
+            color: white;
+
+            text-decoration: none;
+
+            font-size: 14px;
+            font-weight: 700;
+
+            box-shadow:
+                0 8px 24px
+                rgba(79,70,229,.28),
+                0 2px 6px
+                rgba(15,23,42,.12);
+
+            transition:
+                transform .15s,
+                box-shadow .15s,
+                filter .15s;
+        }
+
+        .support-button::before {
+            content: "✦";
+
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            width: 18px;
+            height: 18px;
+
+            border-radius: 50%;
+
+            background:
+                rgba(255,255,255,.18);
+
+            font-size: 11px;
+            line-height: 1;
+        }
+
+        .support-button:hover {
+            filter: brightness(1.04);
+
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 12px 28px
+                rgba(79,70,229,.34),
+                0 4px 9px
+                rgba(15,23,42,.14);
+        }
+
+        .support-button:active {
+            transform: translateY(0);
+        }
+
+        /* FOOTER */
+        .footer-note {
+            margin-top: 20px;
+
+            text-align: center;
+
+            color: var(--text-muted);
+
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        /* MOBILE */
+        @media (max-width:650px) {
+
+            .card {
+                padding: 24px;
+            }
+
+            h1 {
+                font-size: 25px;
+            }
+
+            .title-note {
+                display: block;
+                margin-left: 0;
+                margin-top: 5px;
+            }
+
+            .input-row,
+            .settings,
+            .results,
+            .trig-options {
+                grid-template-columns: 1fr;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+
+            .language-section {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+            }
+
+            .language-label {
+                font-size: 14px;
+            }
+
+            .language-switcher {
+                width: 100%;
+            }
+
+            .language-link,
+            .language-more-button {
+                flex: 1;
+                height: 40px;
+            }
+
+            .language-menu {
+                left: 0;
+                right: 0;
+
+                width: 100%;
+
+                top: calc(100% + 8px);
+            }
+
+            .language-menu-list {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .support-button {
+                right: 14px;
+                bottom: 14px;
+
+                min-width: 0;
+                height: 42px;
+
+                padding: 0 15px;
+
+                font-size: 13px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="page">
+
+    <main class="container">
+
+        <section class="card">
+
+            <!-- HEADER -->
+            <header class="header">
+
+                <h1>
+
+                    {{ translations.get(
+                        "title",
+                        "Калькулятор квадратного корня"
+                    ) }}
+
+                    <span class="title-note">
+
+                        {{ translations.get(
+                            "title_note",
+                            "(на все 100$)"
+                        ) }}
+
+                    </span>
+
+                </h1>
+
+                <p class="subtitle">
+
+                    {{ translations.get(
+                        "subtitle",
+                        "Вычисление квадратных корней действительных и комплексных чисел с заданной точностью."
+                    ) }}
+
+                </p>
+
+            </header>
+
+
+            <!-- TABS -->
+            <div class="tabs">
+
+                <button
+                    type="button"
+                    class="tab-button {% if active_tab != 'trig' %}active{% endif %}"
+                    data-tab="root"
+                    onclick="switchTab('root')"
+                >
+
+                    {{ translations.get(
+                        "square_root_tab",
+                        "Квадратный корень"
+                    ) }}
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="tab-button {% if active_tab == 'trig' %}active{% endif %}"
+                    data-tab="trig"
+                    onclick="switchTab('trig')"
+                >
+
+                    {{ translations.get(
+                        "trigonometry_tab",
+                        "Тригонометрия"
+                    ) }}
+
+                </button>
+
+            </div>
+
+
+            <!-- ROOT TAB -->
+            <section
+                id="root-tab"
+                class="tab-content {% if active_tab != 'trig' %}active{% endif %}"
+            >
+
+                <form
+                    class="form"
+                    method="POST"
+                    action="{{ url_for('index') }}"
+                >
+
+                    <input
+                        type="hidden"
+                        name="lang"
+                        value="{{ language }}"
+                    >
+
+                    <input
+                        type="hidden"
+                        name="active_tab"
+                        value="root"
+                    >
+
+
+                    <div class="input-row">
+
+                        <div class="input-group">
+
+                            <label for="real">
+
+                                {{ translations.get(
+                                    "real",
+                                    "Действительная часть"
+                                ) }}
+
+                            </label>
+
+                            <input
+                                id="real"
+                                name="real"
+                                type="text"
+                                value="{{ real }}"
+                                placeholder="{{
+                                    translations.get(
+                                        'real_placeholder',
+                                        'Например: 3'
+                                    )
+                                }}"
+                            >
+
+                            <div class="hint">
+
+                                {{ translations.get(
+                                    "real_hint",
+                                    "Можно оставить пустым, если число полностью мнимое."
+                                ) }}
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="input-group">
+
+                            <label for="imag">
+
+                                {{ translations.get(
+                                    "imag",
+                                    "Мнимая часть"
+                                ) }}
+
+                            </label>
+
+                            <input
+                                id="imag"
+                                name="imag"
+                                type="text"
+                                value="{{ imag }}"
+                                placeholder="{{
+                                    translations.get(
+                                        'imag_placeholder',
+                                        'Например: 4'
+                                    )
+                                }}"
+                            >
+
+                            <div class="hint">
+
+                                {{ translations.get(
+                                    "imag_hint",
+                                    "Например, 4 означает число 4i."
+                                ) }}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="settings">
+
+                        <div class="input-group">
+
+                            <label for="precision">
+
+                                {{ translations.get(
+                                    "precision",
+                                    "Внутренняя точность"
+                                ) }}
+
+                            </label>
+
+                            <input
+                                id="precision"
+                                name="precision"
+                                type="number"
+                                value="{{ precision }}"
+                                min="2"
+                                max="10000"
+                                step="1"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="input-group">
+
+                            <label for="display_digits">
+
+                                {{ translations.get(
+                                    "display_digits",
+                                    "Количество знаков"
+                                ) }}
+
+                            </label>
+
+                            <input
+                                id="display_digits"
+                                name="display_digits"
+                                type="number"
+                                value="{{ display_digits }}"
+                                min="1"
+                                max="1000"
+                                step="1"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <button
+                        class="calculate-button"
+                        type="submit"
+                    >
+
+                        {{ translations.get(
+                            "calculate",
+                            "Вычислить квадратный корень"
+                        ) }}
+
+                    </button>
+
+                </form>
+
+
+                {% if root1 is not none and root2 is not none %}
+
+                <section class="results">
+
+                    <div class="result-card">
+
+                        <div class="result-label">
+
+                            {{ translations.get(
+                                "first_root",
+                                "Первый корень"
+                            ) }}
+
+                        </div>
+
+
+                        <div class="result-value">
+
+                            {{ root1 }}
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="result-card">
+
+                        <div class="result-label">
+
+                            {{ translations.get(
+                                "second_root",
+                                "Второй корень"
+                            ) }}
+
+                        </div>
+
+
+                        <div class="result-value">
+
+                            {{ root2 }}
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+                {% endif %}
+
+            </section>
+
+
+            <!-- TRIG TAB -->
+            <section
+                id="trig-tab"
+                class="tab-content {% if active_tab == 'trig' %}active{% endif %}"
+            >
+
+                <form
+                    class="form"
+                    method="POST"
+                    action="{{ url_for('index') }}"
+                >
+
+                    <input
+                        type="hidden"
+                        name="lang"
+                        value="{{ language }}"
+                    >
+
+                    <input
+                        type="hidden"
+                        name="active_tab"
+                        value="trig"
+                    >
+
+
+                    <div class="input-group">
+
+                        <label for="trig_value">
+
+                            {{ translations.get(
+                                "trig_value",
+                                "Комплексное число"
+                            ) }}
+
+                        </label>
+
+                        <input
+                            id="trig_value"
+                            name="trig_value"
+                            type="text"
+                            value="{{ trig_value }}"
+                            placeholder="{{
+                                translations.get(
+                                    'trig_value_placeholder',
+                                    'Например: -64 или 3+4i'
+                                )
+                            }}"
+                        >
+
+                        <div class="hint">
+
+                            {{ translations.get(
+                                "trig_value_hint",
+                                "Можно вводить действительные и комплексные числа."
+                            ) }}
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="trig-options">
+
+                        <div class="input-group">
+
+                            <label>
+
+                                {{ translations.get(
+                                    "angle_unit",
+                                    "Единица измерения угла"
+                                ) }}
+
+                            </label>
+
+
+                            <div class="unit-selector">
+
+                                <label class="unit-option">
+
+                                    <input
+                                        type="radio"
+                                        name="angle_unit"
+                                        value="rad"
+                                        {% if not trig_degrees %}
+                                            checked
+                                        {% endif %}
+                                    >
+
+                                    <span>
+
+                                        {{ translations.get(
+                                            "radians",
+                                            "Радианы"
+                                        ) }}
+
+                                    </span>
+
+                                </label>
+
+
+                                <label class="unit-option">
+
+                                    <input
+                                        type="radio"
+                                        name="angle_unit"
+                                        value="deg"
+                                        {% if trig_degrees %}
+                                            checked
+                                        {% endif %}
+                                    >
+
+                                    <span>
+
+                                        {{ translations.get(
+                                            "degrees",
+                                            "Градусы"
+                                        ) }}
+
+                                    </span>
+
+                                </label>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="input-group">
+
+                            <label for="trig_display_digits">
+
+                                {{ translations.get(
+                                    "display_digits",
+                                    "Количество знаков"
+                                ) }}
+
+                            </label>
+
+                            <input
+                                id="trig_display_digits"
+                                name="display_digits"
+                                type="number"
+                                value="{{ display_digits }}"
+                                min="1"
+                                max="1000"
+                                step="1"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <button
+                        class="calculate-button trig-button"
+                        type="submit"
+                    >
+
+                        {{ translations.get(
+                            "calculate_trigonometric",
+                            "Вычислить тригонометрическую форму"
+                        ) }}
+
+                    </button>
+
+                </form>
+
+
+                {% if trig_radius is defined and trig_radius is not none %}
+
+                <section class="trig-results">
+
+                    <div class="trig-result-card">
+
+                        <div class="trig-result-title">
+
+                            {{ translations.get(
+                                "trigonometric_form",
+                                "Тригонометрическая форма"
+                            ) }}
+
+                        </div>
+
+
+                        <div class="trig-line">
+
+                            <span class="trig-label">
+
+                                {{ translations.get(
+                                    "module",
+                                    "Модуль"
+                                ) }}
+
+                            </span>
+
+                            {{ trig_radius }}
+
+                        </div>
+
+
+                        <div class="trig-line">
+
+                            <span class="trig-label">
+
+                                {{ translations.get(
+                                    "argument",
+                                    "Аргумент"
+                                ) }}
+
+                            </span>
+
+                            {{ trig_angle }}
+
+                            {% if trig_degrees %}
+
+                                °
+
+                            {% else %}
+
+                                {% if language == "ru" %}
+
+                                    рад
+
+                                {% else %}
+
+                                    rad
+
+                                {% endif %}
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <div class="trig-line">
+
+                            <span class="trig-label">
+
+                                {{ translations.get(
+                                    "formula",
+                                    "Формула"
+                                ) }}
+
+                            </span>
+
+                            {{ trig_formula }}
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+                {% endif %}
+
+            </section>
+
+
+            <!-- ERROR -->
+            {% if error %}
+
+            <div class="error">
+
+                <div class="error-title">
+
+                    {{ translations.get(
+                        "error",
+                        "Ошибка"
+                    ) }}
+
+                </div>
+
+                <div>
+
+                    {{ error }}
+
+                </div>
+
+            </div>
+
+            {% endif %}
+
+
+            <!-- LANGUAGE -->
+            <div class="language-section">
+
+                <span class="language-label">
+
+                    {{ translations.get(
+                        "language",
+                        "Язык"
+                    ) }}
+
+                </span>
+
+
+                <div
+                    class="language-switcher"
+                    id="language-switcher"
+                >
+
+                    <button
+                        type="button"
+                        class="language-more-button"
+                        id="language-more-button"
+                        aria-expanded="false"
+                        aria-haspopup="true"
+                    >
+
+                        <span>
+
+                            {{ translations.get(
+                                "more_languages",
+                                "Ещё"
+                            ) }}
+
+                        </span>
+
+                        <span
+                            class="language-more-arrow"
+                            aria-hidden="true"
+                        ></span>
+
+                    </button>
+
+
+                    <div
+                        class="language-menu"
+                        id="language-menu"
+                    >
+
+                        <div
+                            class="language-menu-list"
+                            id="language-menu-list"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="footer-note">
+
+                {{ translations.get(
+                    "footer",
+                    "Точный расчёт действительных и комплексных квадратных корней."
+                ) }}
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<!-- SUPPORT -->
+<a
+    href="#"
+    class="support-button"
+    onclick="return false;"
+>
+
+    {{ translations.get(
+        "support",
+        "Техподдержка"
+    ) }}
+
+</a>
+
+
+<script>
+
+    /* =========================
+       CURRENT TAB
+    ========================= */
+
+    function getCurrentActiveTab() {
+
+        const url =
+            new URL(
+                window.location.href
+            );
+
+        const tabFromUrl =
+            url.searchParams.get(
+                "active_tab"
+            );
+
+        if (tabFromUrl === "trig") {
+            return "trig";
+        }
+
+        if (tabFromUrl === "root") {
+            return "root";
+        }
+
+        return "{{ active_tab }}" === "trig"
+            ? "trig"
+            : "root";
+    }
+
+
+    let currentActiveTab =
+        getCurrentActiveTab();
+
+
+    /* =========================
+       TABS
+    ========================= */
+
+    function switchTab(tabName) {
+
+        const rootTab =
+            document.getElementById(
+                "root-tab"
+            );
+
+        const trigTab =
+            document.getElementById(
+                "trig-tab"
+            );
+
+        const buttons =
+            document.querySelectorAll(
+                ".tab-button"
+            );
+
+        const normalizedTab =
+            tabName === "trig"
+                ? "trig"
+                : "root";
+
+
+        rootTab.classList.remove(
+            "active"
+        );
+
+        trigTab.classList.remove(
+            "active"
+        );
+
+
+        buttons.forEach(
+            function(button) {
+
+                button.classList.remove(
+                    "active"
+                );
+
+            }
+        );
+
+
+        if (normalizedTab === "trig") {
+
+            trigTab.classList.add(
+                "active"
+            );
+
+            const trigButton =
+                document.querySelector(
+                    '[data-tab="trig"]'
+                );
+
+            if (trigButton) {
+
+                trigButton.classList.add(
+                    "active"
+                );
+
+            }
+
+        } else {
+
+            rootTab.classList.add(
+                "active"
+            );
+
+            const rootButton =
+                document.querySelector(
+                    '[data-tab="root"]'
+                );
+
+            if (rootButton) {
+
+                rootButton.classList.add(
+                    "active"
+                );
+
+            }
+
+        }
+
+
+        currentActiveTab =
+            normalizedTab;
+
+
+        const url =
+            new URL(
+                window.location.href
+            );
+
+        url.searchParams.set(
+            "active_tab",
+            normalizedTab
+        );
+
+        window.history.replaceState(
+            {},
+            "",
+            url.toString()
+        );
+    }
+
+
+    /* =========================
+       LANGUAGE URL
+    ========================= */
+
+    function buildLanguageUrl(
+        languageCode
+    ) {
+
+        const url =
+            new URL(
+                window.location.href
+            );
+
+        const activeTab =
+            getCurrentActiveTab();
+
+
+        url.searchParams.set(
+            "lang",
+            languageCode
+        );
+
+        url.searchParams.set(
+            "active_tab",
+            activeTab
+        );
+
+        url.hash = "";
+
+        return url.toString();
+    }
+
+
+    /* =========================
+       LANGUAGE MENU
+    ========================= */
+
+    function setLanguageMenuOpen(
+        isOpen
+    ) {
+
+        const button =
+            document.getElementById(
+                "language-more-button"
+            );
+
+        const menu =
+            document.getElementById(
+                "language-menu"
+            );
+
+
+        if (!button || !menu) {
+            return;
+        }
+
+
+        if (isOpen) {
+
+            menu.classList.add(
+                "open"
+            );
+
+            button.classList.add(
+                "open"
+            );
+
+            button.setAttribute(
+                "aria-expanded",
+                "true"
+            );
+
+        } else {
+
+            menu.classList.remove(
+                "open"
+            );
+
+            button.classList.remove(
+                "open"
+            );
+
+            button.setAttribute(
+                "aria-expanded",
+                "false"
+            );
+
+        }
+    }
+
+
+    /* =========================
+       DYNAMIC LANGUAGES
+    ========================= */
+
+    async function refreshLanguages() {
+
+        try {
+
+            const response =
+                await fetch(
+                    "{{ url_for('api_languages') }}",
+                    {
+                        cache: "no-store"
+                    }
+                );
+
+
+            if (!response.ok) {
+                return;
+            }
+
+
+            const languages =
+                await response.json();
+
+
+            const switcher =
+                document.getElementById(
+                    "language-switcher"
+                );
+
+            const moreButton =
+                document.getElementById(
+                    "language-more-button"
+                );
+
+            const menu =
+                document.getElementById(
+                    "language-menu"
+                );
+
+            const menuList =
+                document.getElementById(
+                    "language-menu-list"
+                );
+
+
+            if (
+                !switcher ||
+                !moreButton ||
+                !menu ||
+                !menuList
+            ) {
+                return;
+            }
+
+
+            const currentLanguage =
+                "{{ language }}";
+
+
+            const preferredCodes = [
+                "ru",
+                "en"
+            ];
+
+
+            const mainLanguages = [];
+
+
+            preferredCodes.forEach(
+                function(code) {
+
+                    const language =
+                        languages.find(
+                            function(item) {
+
+                                return (
+                                    item.code === code
+                                );
+
+                            }
+                        );
+
+
+                    if (language) {
+
+                        mainLanguages.push(
+                            language
+                        );
+
+                    }
+
+                }
+            );
+
+
+            const otherLanguages =
+                languages.filter(
+                    function(item) {
+
+                        return (
+                            !preferredCodes.includes(
+                                item.code
+                            )
+                        );
+
+                    }
+                );
+
+
+            switcher
+                .querySelectorAll(
+                    ".language-link"
+                )
+                .forEach(
+                    function(element) {
+
+                        element.remove();
+
+                    }
+                );
+
+
+            mainLanguages.forEach(
+                function(item) {
+
+                    const link =
+                        document.createElement(
+                            "a"
+                        );
+
+
+                    link.className =
+                        "language-link";
+
+
+                    link.dataset.language =
+                        item.code;
+
+
+                    if (
+                        item.code ===
+                        currentLanguage
+                    ) {
+
+                        link.classList.add(
+                            "active"
+                        );
+
+                    }
+
+
+                    link.href =
+                        buildLanguageUrl(
+                            item.code
+                        );
+
+
+                    link.textContent =
+                        item.native_name ||
+                        item.code;
+
+
+                    switcher.insertBefore(
+                        link,
+                        moreButton
+                    );
+
+                }
+            );
+
+
+            menuList.replaceChildren();
+
+
+            otherLanguages.forEach(
+                function(item) {
+
+                    const link =
+                        document.createElement(
+                            "a"
+                        );
+
+
+                    link.className =
+                        "language-menu-item";
+
+
+                    link.dataset.language =
+                        item.code;
+
+
+                    link.href =
+                        buildLanguageUrl(
+                            item.code
+                        );
+
+
+                    if (
+                        item.code ===
+                        currentLanguage
+                    ) {
+
+                        link.classList.add(
+                            "active"
+                        );
+
+                    }
+
+
+                    const name =
+                        document.createElement(
+                            "span"
+                        );
+
+
+                    name.textContent =
+                        item.native_name ||
+                        item.code;
+
+
+                    link.appendChild(
+                        name
+                    );
+
+
+                    if (
+                        item.code ===
+                        currentLanguage
+                    ) {
+
+                        const check =
+                            document.createElement(
+                                "span"
+                            );
+
+
+                        check.className =
+                            "language-menu-item-check";
+
+
+                        check.textContent =
+                            "✓";
+
+
+                        link.appendChild(
+                            check
+                        );
+
+                    }
+
+
+                    menuList.appendChild(
+                        link
+                    );
+
+                }
+            );
+
+
+            if (
+                otherLanguages.length === 0
+            ) {
+
+                moreButton.style.display =
+                    "none";
+
+                setLanguageMenuOpen(
+                    false
+                );
+
+            } else {
+
+                moreButton.style.display =
+                    "inline-flex";
+
+            }
+
+
+        } catch (error) {
+
+            /*
+             * Если API языков временно
+             * недоступен, калькулятор
+             * продолжает работать.
+             */
+
+        }
+
+    }
+
+
+    /* =========================
+       EVENTS
+    ========================= */
+
+    document.addEventListener(
+        "click",
+        function(event) {
+
+            const moreButton =
+                event.target.closest(
+                    "#language-more-button"
+                );
+
+            const languageItem =
+                event.target.closest(
+                    ".language-link, .language-menu-item"
+                );
+
+
+            if (moreButton) {
+
+                const menu =
+                    document.getElementById(
+                        "language-menu"
+                    );
+
+
+                if (!menu) {
+                    return;
+                }
+
+
+                setLanguageMenuOpen(
+                    !menu.classList.contains(
+                        "open"
+                    )
+                );
+
+
+                return;
+            }
+
+
+            if (languageItem) {
+
+                event.preventDefault();
+
+
+                const languageCode =
+                    languageItem.dataset.language;
+
+
+                if (!languageCode) {
+                    return;
+                }
+
+
+                const targetUrl =
+                    buildLanguageUrl(
+                        languageCode
+                    );
+
+
+                setLanguageMenuOpen(
+                    false
+                );
+
+
+                window.location.assign(
+                    targetUrl
+                );
+
+
+                return;
+            }
+
+
+            const menu =
+                document.getElementById(
+                    "language-menu"
+                );
+
+            const switcher =
+                document.getElementById(
+                    "language-switcher"
+                );
+
+
+            if (
+                menu &&
+                switcher &&
+                menu.classList.contains(
+                    "open"
+                ) &&
+                !switcher.contains(
+                    event.target
+                )
+            ) {
+
+                setLanguageMenuOpen(
+                    false
+                );
+
+            }
+
+        }
+    );
+
+
+    /* =========================
+       ESC
+    ========================= */
+
+    document.addEventListener(
+        "keydown",
+        function(event) {
+
+            if (
+                event.key === "Escape"
+            ) {
+
+                setLanguageMenuOpen(
+                    false
+                );
+
+            }
+
+        }
+    );
+
+
+    /* =========================
+       INITIALIZATION
+    ========================= */
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        function() {
+
+            currentActiveTab =
+                getCurrentActiveTab();
+
+
+            switchTab(
+                currentActiveTab
+            );
+
+
+            refreshLanguages();
+
+
+            setInterval(
+                refreshLanguages,
+                3000
+            );
+
+        }
+    );
+
+</script>
+
+</body>
+
+</html>
