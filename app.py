@@ -25,6 +25,10 @@ from calculator.service import (
 
 app = Flask(__name__)
 
+@app.route("/support")
+def support():
+    return render_template("support.html")
+
 
 DEFAULT_MESSAGES = {
     "empty_number": (

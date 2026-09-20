@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/support.css') }}"
+    >
+
+    <title>Поддержка</title>
+
+</head>
+
+
+<body>
+
+    <h1>Ответы на часто задаваемые вопросы</h1>
+
+    <h2>Общие вопросы</h2>
+
+
+    <div class="question">
+
+        <input
+            type="checkbox"
+            id="toggle-button"
+            class="toggle-checkbox"
+        >
+
+        <label
+            for="toggle-button"
+            class="btn"
+        >
+            Как переключить язык?
+        </label>
+
+        <div class="hidden-text">
+            <p>
+                Зайдите в программу, в самом низу
+                будет смена языка.
+            </p>
+        </div>
+
+    </div>
+
+
+    <div class="question">
+
+        <input
+            type="checkbox"
+            id="toggle-2"
+            class="toggle-checkbox"
+        >
+
+        <label
+            for="toggle-2"
+            class="btn"
+        >
+            Что делает программа?
+        </label>
+
+        <div class="hidden-text">
+            <p>
+                Программа предназначена для извлечения
+                квадратного корня из действительных
+                и комплексных чисел.
+            </p>
+        </div>
+
+    </div>
+
+
+    <div class="question">
+
+        <input
+            type="checkbox"
+            id="toggle-3"
+            class="toggle-checkbox"
+        >
+
+        <label
+            for="toggle-3"
+            class="btn"
+        >
+            Как запустить программу?
+        </label>
+
+        <div class="hidden-text">
+            <p>
+                Необходимо открыть интерфейс программы,
+                далее выбрать нужный режим и ввести
+                число для вычисления.
+            </p>
+        </div>
+
+    </div>
+
+
+    <h2>Работа с вычислениями</h2>
+
+
+    <div class="question">
+
+        <input
+            type="checkbox"
+            id="toggle-6"
+            class="toggle-checkbox"
+        >
+
+        <label
+            for="toggle-6"
+            class="btn"
+        >
+            Можно ли извлечь корень другой степени,
+            а не только квадратный?
+        </label>
+
+        <div class="hidden-text">
+            <p>
+                Нет, программа предназначена только
+                для извлечения квадратного корня.
+            </p>
+        </div>
+
+    </div>
+
+
+    <div class="question">
+
+        <input
+            type="checkbox"
+            id="toggle-7"
+            class="toggle-checkbox"
+        >
+
+        <label
+            for="toggle-7"
+            class="btn"
+        >
+            Можно ли извлечь корень из отрицательного числа?
+        </label>
+
+        <div class="hidden-text">
+            <p>
+                Можно, результат будет в комплексной форме.
+            </p>
+        </div>
+
+    </div>
+
+
+    <div class="question">
+
+        <input
+            type="checkbox"
+            id="toggle-8"
+            class="toggle-checkbox"
+        >
+
+        <label
+            for="toggle-8"
+            class="btn"
+        >
+            Можно ли использовать запятую вместо точки
+            для дробей?
+        </label>
+
+        <div class="hidden-text">
+            <p>
+                Нет, для дробей можно использовать
+                только точку.
+            </p>
+        </div>
+
+    </div>
+
+
+    <div class="question">
+
+        <input
+            type="checkbox"
+            id="toggle-9"
+            class="toggle-checkbox"
+        >
+
+        <label
+            for="toggle-9"
+            class="btn"
+        >
+            Как настроить точность вычислений и что
+            означает параметр "Точность"?
+        </label>
+
+        <div class="hidden-text">
+            <p>
+                Чтобы настроить точность вычислений,
+                нужно ввести необходимое значение
+                в поле "Точность". Этот параметр
+                определяет точность вычисления результата.
+            </p>
+        </div>
+
+    </div>
+
+
+    <div class="question">
+
+        <input
+            type="checkbox"
+            id="toggle-10"
+            class="toggle-checkbox"
+        >
+
+        <label
+            for="toggle-10"
+            class="btn"
+        >
+            Что случится при вводе очень большого числа?
+        </label>
+
+        <div class="hidden-text">
+            <p>
+                Время выполнения программы может увеличиться.
+            </p>
+        </div>
+
+    </div>
+
+
+    <h2>Комплексные числа</h2>
+
+
+    <div class="question">
+
+        <input
+            type="checkbox"
+            id="toggle-11"
+            class="toggle-checkbox"
+        >
+
+        <label
+            for="toggle-11"
+            class="btn"
+        >
+            Как переключить отображение комплексных чисел
+            (алгебраическая/тригонометрическая форма)?
+        </label>
+
+        <div class="hidden-text">
+            <p>
+                Перейдите во вкладку "Квадратный корень"
+                для алгебраической формы и во вкладку
+                "Тригонометрия" для тригонометрической.
+            </p>
+        </div>
+
+    </div>
+
+
+    <h2>Интерфейс и результаты</h2>
+
+
+    <div class="question">
+
+        <input
+            type="checkbox"
+            id="toggle-12"
+            class="toggle-checkbox"
+        >
+
+        <label
+            for="toggle-12"
+            class="btn"
+        >
+            Можно ли увидеть промежуточные шаги вычисления?
+        </label>
+
+        <div class="hidden-text">
+            <p>
+                В текущей версии промежуточные шаги
+                вычисления не предусмотрены.
+            </p>
+        </div>
+
+    </div>
+
+
+    <div class="question">
+
+        <input
+            type="checkbox"
+            id="toggle-13"
+            class="toggle-checkbox"
+        >
+
+        <label
+            for="toggle-13"
+            class="btn"
+        >
+            Можно ли сохранить результат в файле?
+        </label>
+
+        <div class="hidden-text">
+            <p>
+                В текущей версии нельзя сохранить результат
+                в файле.
+            </p>
+        </div>
+
+    </div>
+
+
+    <div class="question">
+
+        <input
+            type="checkbox"
+            id="toggle-14"
+            class="toggle-checkbox"
+        >
+
+        <label
+            for="toggle-14"
+            class="btn"
+        >
+            Что делать, если результат кажется неверным?
+        </label>
+
+        <div class="hidden-text">
+            <p>
+                Проверьте введенное число, заданную точность
+                и количество знаков.
+            </p>
+        </div>
+
+    </div>
+
+
+    <h2>Ошибки и устранение проблем</h2>
+
+
+    <div class="question">
+
+        <input
+            type="checkbox"
+            id="toggle-15"
+            class="toggle-checkbox"
+        >
+
+        <label
+            for="toggle-15"
+            class="btn"
+        >
+            Что делать, если программа выдает сообщение
+            об ошибке?
+        </label>
+
+        <div class="hidden-text">
+            <p>
+                Проверьте правильность введенных данных.
+            </p>
+        </div>
+
+    </div>
+
+
+    <div class="question">
+
+        <input
+            type="checkbox"
+            id="toggle-16"
+            class="toggle-checkbox"
+        >
+
+        <label
+            for="toggle-16"
+            class="btn"
+        >
+            Что случится, если ввести буквы вместо чисел?
+        </label>
+
+        <div class="hidden-text">
+            <p>
+                Программа не сможет вычислить результат
+                и выдаст сообщение об ошибке.
+            </p>
+        </div>
+
+    </div>
+
+
+    <div class="question">
+
+        <input
+            type="checkbox"
+            id="toggle-17"
+            class="toggle-checkbox"
+        >
+
+        <label
+            for="toggle-17"
+            class="btn"
+        >
+            Есть ли журнал ошибок?
+        </label>
+
+        <div class="hidden-text">
+            <p>
+                В текущей версии нет журнала ошибок.
+            </p>
+        </div>
+
+    </div>
+
+
+    <h2>Поддержка</h2>
+
+
+    <div class="question">
+
+        <input
+            type="checkbox"
+            id="toggle-18"
+            class="toggle-checkbox"
+        >
+
+        <label
+            for="toggle-18"
+            class="btn"
+        >
+            Куда обратиться, если возникла проблема
+            при работе с программой?
+        </label>
+
+        <div class="hidden-text">
+            <p>
+                Если при работе с программой возникла
+                проблема, напишите нам на почту
+                forFAQ2026@gmail.com и подробно
+                опишите проблему.
+            </p>
+        </div>
+
+    </div>
+
+
+    <a
+        href="{{ url_for('index') }}"
+        class="btn-back"
+    >
+        На главную
+    </a>
+
+</body>
+
+</html>

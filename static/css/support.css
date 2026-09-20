@@ -1,0 +1,175 @@
+body {
+    display: flex;
+    text-align: center;
+    font-family: 'Montserrat', sans-serif;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    margin: 0;
+    padding: 40px 20px;
+
+    background-color: #f1f5f9;
+}
+
+
+h1 {
+    color: black;
+}
+
+
+h2 {
+    color: black;
+
+    margin-top: 30px;
+}
+
+
+.question {
+    width: 500px;
+
+    border: 2px solid #333;
+
+    padding: 10px 15px;
+
+    border-radius: 10px;
+
+    text-align: left;
+
+    background-color: rgb(225, 220, 220);
+
+    font-size: 16px;
+
+    margin-top: 10px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+}
+
+
+.box-container {
+    display: flex;
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 10px;
+
+    font-family: Arial, sans-serif;
+
+    margin: 20px;
+}
+
+
+.toggle-checkbox {
+    display: none;
+}
+
+
+.btn {
+    display: inline-block;
+
+    padding: 10px 20px;
+
+    background-color: rgb(225, 220, 220);
+
+    color: black;
+
+    border-radius: 5px;
+
+    cursor: pointer;
+
+    user-select: none;
+
+    transition:
+        background-color 0.2s ease;
+}
+
+
+.btn:hover {
+    background-color: rgb(210, 205, 205);
+}
+
+
+.hidden-text {
+    max-height: 0;
+
+    overflow: hidden;
+
+    opacity: 0;
+
+    transition:
+        max-height 0.3s ease,
+        opacity 0.3s ease;
+}
+
+
+.toggle-checkbox:checked ~ .hidden-text {
+    max-height: 200px;
+
+    opacity: 1;
+
+    margin-top: 10px;
+}
+
+
+.btn-back {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    background-color: blue;
+
+    font-family: 'Montserrat', sans-serif;
+
+    color: white;
+
+    border-radius: 10px;
+
+    width: 150px;
+    height: 40px;
+
+    border: 1px solid blue;
+
+    text-decoration: none;
+
+    cursor: pointer;
+
+    margin-top: 30px;
+
+    transition:
+        background-color 0.15s ease,
+        transform 0.15s ease;
+}
+
+
+.btn-back:hover {
+    background-color: #4338ca;
+
+    transform: translateY(-1px);
+}
+
+
+@media (max-width: 650px) {
+
+    .question {
+        width: min(500px, 100%);
+    }
+
+    h1 {
+        font-size: 24px;
+    }
+
+    h2 {
+        font-size: 20px;
+    }
+
+    .btn {
+        font-size: 14px;
+    }
+
+}
